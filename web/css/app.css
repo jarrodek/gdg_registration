@@ -180,7 +180,7 @@ ng\:form {
 }
 
 
-
+.registration,
 .setup {
   display: flex;
   flex-direction: column;
@@ -221,4 +221,8 @@ h1.medium{
 .error-message {
   margin: 10px 0;
   color: #ff6666;
+}
+.event-logo {
+  text-align: center;
+  margin: 0 0 20px 0;
 }

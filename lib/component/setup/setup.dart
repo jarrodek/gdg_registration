@@ -47,7 +47,7 @@ class SetupComponent {
       spreadsheetId = _tmp.split("#")[0];
       spreadsheetId = spreadsheetId.split("&")[0];
     } else {
-      return;
+      spreadsheetId = spreadsheetUrl; 
     }
     
     loading = true;
@@ -71,7 +71,7 @@ class SetupComponent {
   
   void onAcceptWorksheet(){
     dataService.storeSpreadsheedData(spreadsheetId, worksheet);
-    router.go('/start', {});
+    router.gotoUrl('/start');
   }
   
   

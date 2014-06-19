@@ -2,10 +2,8 @@ library gdgregistration;
 
 import 'dart:html';
 
-import 'package:chrome/chrome_app.dart' as chrome;
 import 'package:angular/angular.dart';
 import 'package:angular/application_factory.dart';
-import 'package:angular/animate/module.dart';
 import 'package:logging/logging.dart';
 
 import 'package:gdg_registration/service/data_service.dart';
@@ -15,6 +13,7 @@ import 'package:gdg_registration/component/data_handler/data_handler.dart';
 import 'package:gdg_registration/component/setup/setup.dart';
 import 'package:gdg_registration/component/setup/spreadsheet.dart';
 import 'package:gdg_registration/component/setup/worksheet.dart';
+import 'package:gdg_registration/component/registration/registration.dart';
 
 void main() {
   Logger.root
@@ -39,7 +38,8 @@ void main() {
     ..bind(DataHandlerComponent)
     ..bind(SetupComponent)
     ..bind(AddSpreadsheetComponent)
-    ..bind(SelectWorksheetComponent);
+    ..bind(SelectWorksheetComponent)
+    ..bind(RegistrationComponent);
   
   applicationFactory().addModule(registrationModule).run();
 }

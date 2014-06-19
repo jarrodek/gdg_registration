@@ -100,4 +100,28 @@ class DataService {
     return completer.future;
   }
   
+  Future checkConfirmation(String no){
+    
+    //https://spreadsheets.google.com/feeds/list/1MZKtK9Ohq50V17ROEW_VcmCfmhRgmPR_81Tvq6G3Exw/od6/public/full?alt=json&sq=confirmation%3D123
+    _buildQueryUrl(no).then((String url) => _sendQuery(url));
+    
+  }
+  
+  
+  Future<String> _buildQueryUrl(String query){
+    return getWorksheetFullId().then((String id){
+      
+      String searchField = "Adres e-mail";
+      var sq = Uri.encodeFull("$searchField=$query");
+      
+      return "https://spreadsheets.google.com/feeds/list/$id/public/full?alt=json&sq=$sq";
+    });
+  }
+  
+  Future _sendQuery(String url){
+    print("SENDING $url");
+    
+    return _http.get(url);
+  }
+  
 }

@@ -1,0 +1,18 @@
+<div class="registration">
+  <section ng-show="cmp.loading == false" class="email-entry container-fluid">
+    <div class="event-logo">
+      <img src="img/io.png"/>
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="enter confirmation number here" ng-model="cmp.confirmationNumber" class="form-control"/>
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" ng-click="cmp.onEnterValue()" ng-disabled="cmp.confirmationNumber == null || cmp.confirmationNumber == ''">Next</button>
+      </span>
+    </div>
+  </section>
+  <section ng-show="cmp.loading" class="email-entry container-fluid loader">
+    <div class="loader">
+      <img src="img/loader.gif"/>
+    </div>
+  </section>
+</div>
