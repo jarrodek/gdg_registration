@@ -1,0 +1,5 @@
+<div class="setup">
+  <div class="error-message">{{cmp.error}}</div>
+  <div ng-show="cmp.worksheets == null" spreadsheet value="cmp.spreadsheetUrl" on-accept-value="cmp.onAcceptSpreadsheetUrl()"></div>
+  <div ng-show="cmp.worksheets != null" worksheets value="cmp.worksheets" worksheet="cmp.worksheet" on-accept-value="cmp.onAcceptWorksheet()"></div>
+</div>

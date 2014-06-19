@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app lang="en" ng-csp>
+  <head>
+    <meta charset="utf-8">
+    <title>Gdg registration</title>
+    <script src="packages/web_components/platform.js"></script>
+    <script src="packages/web_components/dart_support.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body registration-app ng-cloak>
+    
+    <ng-view autoscroll="true" class="view-animate">
+      <!-- So the data-handler component can have access to Router it must be placed inside ng-view directive -->
+      <data-handler></data-handler>
+    </ng-view>
+    
+    <!--script src="packages/chrome/bootstrap.js" defer></script-->
+    <script src="gdg_registration.dart" type="application/dart"></script>
+    <script type="text/javascript" src="packages/browser/dart.js"></script>    
+  </body>
+</html>

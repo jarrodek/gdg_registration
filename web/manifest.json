@@ -1,0 +1,16 @@
+{
+  "name": "Gdg registration",
+  "version": "1",
+  
+  "manifest_version": 2,
+  
+  "icons": {"128": "dart_icon.png"},
+  
+  "permissions": ["storage"],
+  
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  }
+}

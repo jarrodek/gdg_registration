@@ -1,0 +1,11 @@
+<section title="Worksheet list" class="spreadsheet-entry container-fluid">
+  
+  <h1 class="medium color-gray">Select worksheet</h1>
+  <ul class="worksheet-selector">
+    <li class="worksheet-item color-gray" ng-class="{'selected': cmp.worksheet == id}" ng-repeat="id in cmp.ids" ng-click="cmp.select(id)">{{cmp.value[id]}}</li>
+  </ul>
+  <div class="actions">
+    <button class="btn btn-primary" ng-disabled="cmp.worksheet == null" ng-click="cmp.onEnterValue()">Select</button>
+  </div>
+  
+</section>

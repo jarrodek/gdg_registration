@@ -1,0 +1,20 @@
+name: gdg_registration
+version: 1.0.0
+author: Pawel Psztyc
+description: This is a sample application for kiosk app for Google Chrome written in Dart.
+dependencies:
+  angular: any
+  chrome: any
+  web_components: any
+transformers:
+- chrome
+- angular:
+    csp: true
+- $dart2js:
+    checked: false
+    minify: false
+    verbose: false
+    analyzeAll: false
+    suppressWarnings: false
+    suppressHints: false
+    terse: false
