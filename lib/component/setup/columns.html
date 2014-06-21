@@ -1,0 +1,23 @@
+<section class="columns-map container-fluid">
+  
+  <h1 class="medium color-gray">Map columns</h1>
+  <p>You need to map column names from your worksheet to app's fields.</p>
+  <p>The app require to map at least Confirmation Number column and participant name. Name will be printed on the badge. You can define and map more fields to be printed on the badge.</p>
+  <ul class="column-list">
+    <li class="column-item row color-gray" ng-repeat="column in cmp.mapping">
+      <div class="column-name col-md-3" ng-if="column.key != null">{{column.name}}:</div>
+      <div class="column-name col-md-3" ng-if="column.key == null">
+        <input ng-keyup="cmp.nameFieldChange(column)" type="text" ng-model="column.name" placeholder="Field name" class="form-control"/>
+      </div>
+      <div class="column-value col-md-9">
+        <select class="form-control" ng-model="cmp.mapping[$index].col">
+          <option ng-value="0">-- choose column --</option>
+          <option ng-repeat="c in cmp.columns" value="{{c.col}}">{{c.title}}</option>
+        </select>
+      </div>
+    </li>
+  </ul>
+  <div class="actions">
+    <button class="btn btn-default" type="button" ng-click="cmp.onEnterValue()">Next</button>
+  </div>
+</section>

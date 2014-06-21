@@ -226,3 +226,22 @@ h1.medium{
   text-align: center;
   margin: 0 0 20px 0;
 }
+.column-list {
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+.column-list > li{
+  margin: 10px 0;
+  padding: 10px 0;
+  border-bottom: 1px #e5e5e5 solid;
+}
+.column-list > li:last-child{
+  border-bottom: none;
+}
+.column-list > li .column-name{
+  
+}
+.column-list > li .column-value{
+  
+}

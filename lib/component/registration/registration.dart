@@ -18,7 +18,6 @@ class RegistrationComponent {
   RegistrationComponent(DataService this.dataService);
   
   void onEnterValue(){
-    print(confirmationNumber);
     loading = true;
     
     dataService.checkConfirmation(confirmationNumber);
