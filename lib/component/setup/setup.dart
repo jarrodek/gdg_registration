@@ -108,8 +108,6 @@ class SetupComponent {
     }).catchError((_){
       error = "Couldn't get columns definitions.";
     });
-    
-    //router.gotoUrl('/start');
   }
   
   void onAcceptMapping(){
@@ -137,7 +135,6 @@ class SetupComponent {
     
     dataService.saveColumnMapping(mapping).then((_) => router.gotoUrl('/start'))
     .catchError((e) => error = "Error occured");
-    
     
   }
   

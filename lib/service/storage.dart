@@ -22,7 +22,7 @@ class StorageService {
   
   Future restore(data){
     if(hasStore){
-      return chrome.storage.local.set(data);
+      return chrome.storage.local.get(data);
     } else {
       throw "Not yet implemented";
     }

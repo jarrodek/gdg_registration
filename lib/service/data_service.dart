@@ -99,16 +99,11 @@ class DataService {
     var completer = new Completer();
     
     _worksheetId = "$spreadsheet/$worksheet";
-    if(chrome.storage != null && chrome.storage.local != null){
-      chrome.storage.local.set({
-        KEY_SPREADSHEET: spreadsheet,
-        KEY_WORKSHEET: worksheet
-      }).then((_) => completer.complete()).catchError((e) => completer.completeError(e));
-    } else {
-      window.localStorage[KEY_SPREADSHEET] = spreadsheet;
-      window.localStorage[KEY_WORKSHEET] = worksheet;
-      completer.complete();
-    }
+    
+    _storage.store({
+      KEY_SPREADSHEET: spreadsheet,
+      KEY_WORKSHEET: worksheet
+    }).then((_) => completer.complete()).catchError((e) => completer.completeError(e));
     
     return completer.future;
   }
@@ -116,28 +111,17 @@ class DataService {
   Future<String> getWorksheetFullId(){
     var completer = new Completer();
     if(_worksheetId == null){
-      if(chrome.storage != null && chrome.storage.local != null){
-        chrome.storage.local.get({
-          KEY_SPREADSHEET: null,
-          KEY_WORKSHEET: null
-        }).then((Map data){
-          if(data[KEY_SPREADSHEET] == null || data[KEY_WORKSHEET] == null){
-            completer.complete(null);
-            return;
-          }
-          _worksheetId = "${data[KEY_SPREADSHEET]}/${data[KEY_WORKSHEET]}";
-          completer.complete(_worksheetId);
-        }).catchError((e) => completer.completeError(e));
-      } else {
-        String spreadsheet = window.localStorage[KEY_SPREADSHEET];
-        String worksheet = window.localStorage[KEY_WORKSHEET];
-        if(spreadsheet == null || worksheet == null){
+      _storage.restore({
+        KEY_SPREADSHEET: null,
+        KEY_WORKSHEET: null
+      }).then((Map data){
+        if(data[KEY_SPREADSHEET] == null || data[KEY_WORKSHEET] == null){
           completer.complete(null);
-        } else {
-          _worksheetId = "${spreadsheet}/${worksheet}";
-          completer.complete(_worksheetId);
+          return;
         }
-      }
+        _worksheetId = "${data[KEY_SPREADSHEET]}/${data[KEY_WORKSHEET]}";
+        completer.complete(_worksheetId);
+      }).catchError((e) => completer.completeError(e));
     } else {
       completer.complete(_worksheetId);
     }
@@ -146,9 +130,11 @@ class DataService {
   
   Future checkConfirmation(String no){
     
-    //https://spreadsheets.google.com/feeds/list/1MZKtK9Ohq50V17ROEW_VcmCfmhRgmPR_81Tvq6G3Exw/od6/public/full?alt=json&sq=confirmation%3D123
-    _buildQueryUrl(no).then((String url) => _sendQuery(url));
-    
+    //https://spreadsheets.google.com/feeds/list/ID/KEY/public/full?alt=json&sq=confirmation%3D123
+    return _buildQueryUrl(no)
+    .then((String url) => _sendQuery(url))
+    .then((r) => _parseQueryResponse(r))
+    .then((data) => data);
   }
   
   
@@ -164,16 +150,78 @@ class DataService {
   
   
   Future _sendQuery(String url){
-    print("SENDING $url");
+    return _http.get(url).then((HttpResponse r) => r.data).catchError((e) => throw "Connection error");
+  }
+  
+  Map _parseQueryResponse(Map data){
+    if(data == null) {
+      throw "Data not available (#1)";
+    }
+    if(!data.containsKey(r'feed')){
+      throw "Invalid response (#2)";
+    }
+    Map feed = data['feed'];
+    if(!feed.containsKey(r'openSearch$totalResults')){
+      throw "Invalid response (#3)";
+    }
+    var _c = feed[r'openSearch$totalResults'][r'$t'];
+    int results;
+    try{
+      results = int.parse(_c);
+    } catch (e){
+      throw "Invalid response (#4)";
+    }
+    if(results != 1){
+      return null;
+    }
     
-    return _http.get(url);
+    if(!feed.containsKey(r'entry')){
+      throw "Invalid response (#5)";
+    }
+    Map entry = feed['entry'][0];
+    
+    var completer = new Completer();
+    getColumnsMapping().then((List mapping){
+      
+      if(mapping == null){
+        throw "App is not set up.";
+      }
+      
+      List toPrint = [];
+      String confirmationId = null;
+      
+      //[{key: CONFIRMATION_NUMBER, name: Confirmation number, value: ConfirmationCode, col: 11}, {key: NAME, name: Name, value: Imię i nazwisko, col: 2}, {key: null, name: Company, value: Firma / uczelnia, col: 3}] 
+      for(var i=0, len=mapping.length; i<len; i++){
+        Map _m = mapping[i];
+        if(_m.containsKey('key') && _m['key'] == 'CONFIRMATION_NUMBER'){
+          var confirmationId_col = _normalizeColumnName(_m['value']);
+          print('confirmationId_col: $confirmationId_col');
+          confirmationId = entry['gsx\$$confirmationId_col'][r'$t'];
+        } else {
+          var colName = _normalizeColumnName(_m['value']);
+          print('colName: $colName');
+          toPrint.add({
+            'name': _m['name'],
+            'value': entry['gsx\$$colName'][r'$t']
+          });
+        }
+      }
+      
+      completer.complete({
+        'cid': confirmationId,
+        'data': toPrint
+      });
+      
+    });
+    
+    
+    return completer.future;
   }
   
   
   String _normalizeColumnName(String name){
+    name = name.replaceAll(new RegExp(r"[:;\(\)\[\] \./\?<>'!@#\$\%\^\&\*_]", caseSensitive: true, multiLine: true), '');
     name = name.toLowerCase();
-    name = name.replaceAll(r'\s', '');
-    name = name.replaceAll(r'[_-]', '');
     return name;
   }
   
@@ -186,6 +234,12 @@ class DataService {
     });
   }
   
+  Future getColumnsMapping(){
+    return _storage.restore({
+      KEY_MAPPING: null
+    })
+    .then((Map data) => data[KEY_MAPPING] == null ? null : JSON.decode(data[KEY_MAPPING]));
+  }
 }
 
 

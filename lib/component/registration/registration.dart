@@ -12,7 +12,7 @@ import '../../service/data_service.dart';
 class RegistrationComponent {
   
   DataService dataService;
-  String confirmationNumber;
+  String confirmationNumber = "WzX8T";
   bool loading = false;
   
   RegistrationComponent(DataService this.dataService);
@@ -20,6 +20,18 @@ class RegistrationComponent {
   void onEnterValue(){
     loading = true;
     
-    dataService.checkConfirmation(confirmationNumber);
+    dataService.checkConfirmation(confirmationNumber)
+    .then((Map data){
+      loading = false;
+      print("data: $data");
+    })
+    .catchError((Error e){
+      loading = false;
+      if(e is String){
+        print("ERROR: e");
+      } else {
+        print("ERROR: e");
+      }
+    });
   }
 }
