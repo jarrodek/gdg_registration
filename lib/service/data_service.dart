@@ -195,11 +195,15 @@ class DataService {
         Map _m = mapping[i];
         if(_m.containsKey('key') && _m['key'] == 'CONFIRMATION_NUMBER'){
           var confirmationId_col = _normalizeColumnName(_m['value']);
-          print('confirmationId_col: $confirmationId_col');
           confirmationId = entry['gsx\$$confirmationId_col'][r'$t'];
         } else {
           var colName = _normalizeColumnName(_m['value']);
-          print('colName: $colName');
+          print('colName: gsx\$$colName');
+          if(!entry.containsKey('gsx\$$colName')){
+            print('Column does not exists');
+            continue;
+          }
+          
           toPrint.add({
             'name': _m['name'],
             'value': entry['gsx\$$colName'][r'$t']

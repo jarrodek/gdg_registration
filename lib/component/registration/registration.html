@@ -15,4 +15,14 @@
       <img src="img/loader.gif"/>
     </div>
   </section>
+  
+  <section ng-show="cmp.printing" class="email-entry container-fluid loader">
+    <div class="loader">
+      <label>Your badge is printing</label>
+      <img src="img/loader.gif"/>
+    </div>
+  </section>
+  
+  <canvas ng-show="cmp.printData != null" id="previewCanvas" width="304" height="400"></canvas>
+  
 </div>
